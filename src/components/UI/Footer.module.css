@@ -1,0 +1,14 @@
+footer {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  letter-spacing: 0.15rem;
+  font-weight: 200;
+  font-size: 0.75rem;
+  background-color: #cde4ff;
+}
+
+.footerLine {
+  margin: 5px 0;
+}
