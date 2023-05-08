@@ -2,14 +2,17 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import SendIcon from "@mui/icons-material/Send";
 import { Box, Button, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-
-import { Translate } from "@mui/icons-material";
-
 import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import { addDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useEffect, useState } from "react";
+import { v4 } from "uuid";
+import { dbInstance, storage } from "../../firebaseConfig";
+// import app from "../../firebaseConfig";
 import classes from "./MakeReport.module.css";
 
 const report = {
+  id: "",
   name: "",
   srn: "",
   phone: "",
@@ -18,21 +21,127 @@ const report = {
   location: "",
   details: "",
   contactInfo: "",
+  imgUrl: "",
 };
 
-const MakeReport = () => {
-  const [fileUploaded, setFileUploaded] = useState(false);
+const MakeReport = ({ closeDialog }) => {
+  const [fileUploadStatus, setFileUploadStatus] = useState(false);
   const [imagePreview, setimagePreview] = useState();
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [makeReport, setMakeReport] = useState({ ...report, id: v4() });
 
-  const handleUpload = (e) => {
-    console.log(fileUploaded);
-    setFileUploaded(true);
-    setimagePreview(URL.createObjectURL(e.target.files[0]));
+  const onTextChange = (e) => {
+    // console.log(e.target.name, e.target.value);
+    let changeReport = { ...makeReport, [e.target.name]: e.target.value };
+    setMakeReport(changeReport);
   };
-  const handleSubmit = () => {
-    console.log(fileUploaded);
+
+  //function to upload image to browser
+  const handleUpload = (e) => {
+    setFileUploadStatus(true);
+    setimagePreview(URL.createObjectURL(e.target.files[0]));
+    setUploadedImage(e.target.files[0]);
+  };
+
+  const handleSubmit = (e) => {
+    // if (uploadedImage === null) {
+    //   alert("select an image");
+    //   return;
+    // }
+    async function temp(imgg) {
+      console.log("before uploadingbytes");
+      await uploadBytes(imgg, uploadedImage);
+      console.log("after uploadingbytes");
+      // console.log(uploadedImage);
+
+      //fetching the uploaded image url
+      const responseUrl = await getDownloadURL(ref(storage, imgg));
+      console.log(responseUrl);
+      //updating the makeReport state
+      // setMakeReport((prevMakeReport) => {
+      //  console.log("prevMakeReport :", prevMakeReport);
+      // const newMakeReport = { ...prevMakeReport, imgUrl: responseUrl };
+      //   console.log("newMakeReport :", newMakeReport);
+
+      //   return newMakeReport;
+      // });
+      return responseUrl;
+    }
+
+    async function sendSubmission() {
+      //code to upload image to firebase
+      const imageRef = ref(storage, `/${uploadedImage.name + v4()}`);
+      console.log("before calling temp");
+      const resUrl = await temp(imageRef);
+      console.log("resUrl :", resUrl);
+      console.log("after calling temp");
+      console.log("uploaded");
+      useEffect(() => {
+        setMakeReport({ ...makeReport, imgUrl: responseUrl });
+      }, [makeReport]);
+      console.log("makeReport :", makeReport);
+
+      // //fetching the uploaded image url
+      // const responseUrl = await getDownloadURL(ref(storage, imageRef));
+      // console.log(responseUrl);
+      // //updating the makeReport state
+      // setMakeReport((prevMakeReport) => {
+      //   return { ...prevMakeReport, imgUrl: responseUrl };
+      // });
+
+      console.log(makeReport);
+
+      //basic validation for the time being
+      if (makeReport.name && makeReport.srn && makeReport.objName !== "") {
+        try {
+          // sending the report object to firebase
+          await addDoc(dbInstance, makeReport);
+          alert("Report submitted to firebase");
+
+          // closeDialog();
+        } catch (err) {
+          alert("Something went wrong :(");
+          console.log(err.message);
+        }
+      } else {
+        alert("Fill all the nescecary input fields");
+      }
+    }
+
+    sendSubmission();
+    ///////////////////////////////////////////////
+    //////////////////////////////////////////////////
+    // const imageRef = ref(storage, `/${uploadedImage.name + v4()}`);
+    // uploadBytes(imageRef, uploadedImage).then(() => {
+    //   getDownloadURL(ref(storage, imageRef)).then((url) => {
+    //     console.log(url);
+    //     let changeReport = { ...makeReport, imgUrl: url };
+    //     setMakeReport(changeReport);
+    //   });
+
+    //   alert("image uploaded ");
+    //   // console.log(makeReport);
+    // });
+    // if (
+    //   makeReport.name &&
+    //   makeReport.srn &&
+    //   makeReport.objName  !== ""
+    // ) {
+    //   addDoc(dbInstance, makeReport)
+    //     .then(() => {
+    //       alert("Report submitted");
+    //     })
+    //     .catch((err) => {
+    //       alert("Something went wrong :(");
+    //       console.log(err.message);
+    //     });
+    // } else {
+    //   alert("Fill all the nescecary input fields");
+    // }
+
     // alert("Posted successfully, you may now close the form");
   };
+
   return (
     <>
       {/* <DialogContent>
@@ -61,6 +170,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="name"
+              value={makeReport.name}
             />
             <TextField
               id="outlined-basic"
@@ -72,6 +184,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="srn"
+              value={makeReport.srn}
             />
             <TextField
               id="outlined-basic"
@@ -79,10 +194,14 @@ const MakeReport = () => {
               placeholder="+91 XXXXX XXXXX"
               variant="outlined"
               fullWidth
+              type="number"
               sx={{
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="phone"
+              value={makeReport.phone}
             />
             <TextField
               id="outlined-basic"
@@ -94,6 +213,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="classAndSec"
+              value={makeReport.classAndSec}
             />
             <TextField
               id="outlined-basic"
@@ -105,6 +227,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="objName"
+              value={makeReport.objName}
             />
             <TextField
               id="outlined-basic"
@@ -116,6 +241,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="location"
+              value={makeReport.location}
             />
             <TextField
               id="outlined-basic"
@@ -129,6 +257,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 marginBottom: "2rem",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="details"
+              value={makeReport.details}
             />
             <span
               style={{
@@ -152,6 +283,9 @@ const MakeReport = () => {
                 boxShadow: " 5px 5px 1px rgb(0,0,0)",
                 margin: ".75rem 0",
               }}
+              onChange={(e) => onTextChange(e)}
+              name="contactInfo"
+              value={makeReport.contactInfo}
             />
             <Typography
               sx={{ mt: "2rem", letterSpacing: ".15ch", textAlign: "center" }}
@@ -176,7 +310,7 @@ const MakeReport = () => {
             className={classes.uploads}
             sx={{ textAlign: "center", paddingTop: "25%" }}
           >
-            {!fileUploaded && (
+            {!fileUploadStatus && (
               <Box>
                 <Typography fontSize={"1.5rem"} sx={{ lineHeight: "4rem" }}>
                   {" "}
@@ -224,7 +358,7 @@ const MakeReport = () => {
                 </Box>
               </Box>
             )}
-            {fileUploaded && (
+            {fileUploadStatus && (
               <Box>
                 <Box
                   sx={{
@@ -296,6 +430,7 @@ const MakeReport = () => {
           >
             <Button
               onClick={handleSubmit}
+              // onClick={closeDialog}
               sx={{
                 width: "70%",
                 margin: "auto",

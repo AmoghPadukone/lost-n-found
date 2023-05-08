@@ -93,7 +93,7 @@ const Navbar = () => {
             </IconButton>
           </DialogTitle>
           <Divider />
-          <MakeReport />
+          <MakeReport closeDialog={handleClose} />
         </Dialog>
         <IconButton
           color="primary"
