@@ -4,16 +4,35 @@ import { Box, Button, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 
 import { Translate } from "@mui/icons-material";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 import classes from "./MakeReport.module.css";
 
-const MakeReport = (onClose) => {
+const report = {
+  name: "",
+  srn: "",
+  phone: "",
+  classAndSec: "",
+  objName: "",
+  location: "",
+  details: "",
+  contactInfo: "",
+};
+
+const MakeReport = () => {
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [imagePreview, setimagePreview] = useState();
+
+  const handleUpload = (e) => {
+    console.log(fileUploaded);
+    setFileUploaded(true);
+    setimagePreview(URL.createObjectURL(e.target.files[0]));
+  };
+  const handleSubmit = () => {
+    console.log(fileUploaded);
+    // alert("Posted successfully, you may now close the form");
+  };
   return (
     <>
       {/* <DialogContent>
@@ -157,44 +176,115 @@ const MakeReport = (onClose) => {
             className={classes.uploads}
             sx={{ textAlign: "center", paddingTop: "25%" }}
           >
-            <Typography fontSize={"1.5rem"} sx={{ lineHeight: "4rem" }}>
-              {" "}
-              Upload a clear image{" "}
-            </Typography>
-            <Box
-              sx={{
-                padding: "7rem",
-                display: "inline-flex",
-                borderRadius: "10px",
-                border: "2.5px solid ",
-              }}
-            >
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="label"
-                sx={{ position: "relative", margin: "auto", width: "100%" }}
-              >
-                <input hidden accept="image/*" type="file" />
-                <AddPhotoAlternateIcon
-                  fontSize={"large"}
+            {!fileUploaded && (
+              <Box>
+                <Typography fontSize={"1.5rem"} sx={{ lineHeight: "4rem" }}>
+                  {" "}
+                  Upload a clear image{" "}
+                </Typography>
+                <Box
                   sx={{
-                    color: "#000",
-                    fontSize: "3em",
-                    "&:hover": {
-                      //   backgroundColor: "#E5FFD1",
-                      //   borderColor: "#E5FFD1",
-                      transition: "all .3s",
-                      padding: "5%",
-                      borderRadius: "50%",
-                      boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                      border: "2px solid #000",
-                    },
-                    "&:active": { transform: "scale(.9)" },
+                    padding: "7rem",
+                    display: "inline-flex",
+                    borderRadius: "10px",
+                    border: "2.5px solid ",
                   }}
-                />
-              </IconButton>
-            </Box>
+                >
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                    sx={{ position: "relative", margin: "auto", width: "100%" }}
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleUpload}
+                    />
+                    {}
+                    <AddPhotoAlternateIcon
+                      fontSize={"large"}
+                      sx={{
+                        color: "#000",
+                        fontSize: "3em",
+                        "&:hover": {
+                          //   backgroundColor: "#E5FFD1",
+                          //   borderColor: "#E5FFD1",
+                          transition: "all .3s",
+                          padding: "5%",
+                          borderRadius: "50%",
+                          boxShadow: " 5px 5px 1px rgb(0,0,0)",
+                          border: "2px solid #000",
+                        },
+                        "&:active": { transform: "scale(.9)" },
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+              </Box>
+            )}
+            {fileUploaded && (
+              <Box>
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    // borderRadius: "10px",
+                    // border: "2.5px solid ",
+                  }}
+                >
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                    sx={{ position: "relative", margin: "auto", width: "100%" }}
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleUpload}
+                    />
+                    {}
+                    <AddPhotoAlternateIcon
+                      fontSize={"large"}
+                      sx={{
+                        color: "#000",
+                        fontSize: "2em",
+                        "&:hover": {
+                          //   backgroundColor: "#E5FFD1",
+                          //   borderColor: "#E5FFD1",
+                          transition: "all .3s",
+                          padding: "5%",
+                          borderRadius: "50%",
+                          boxShadow: " 5px 5px 1px rgb(0,0,0)",
+                          border: "2px solid #000",
+                        },
+                        "&:active": { transform: "scale(.9)" },
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+
+                <Box
+                  sx={{
+                    // padding: "7px 0px 10px 10px",
+                    margin: "5px",
+                    borderRadius: "10px",
+                    border: "2.5px solid ",
+                  }}
+                >
+                  <img
+                    src={imagePreview}
+                    style={{ objectFit: "cover", margin: "5px" }}
+                    id="outputImage"
+                    alt="user uploaded image"
+                    width="350"
+                    height="400"
+                  />
+                </Box>
+              </Box>
+            )}
           </Box>
           <Box
             className={classes.button}
@@ -205,6 +295,7 @@ const MakeReport = (onClose) => {
             }}
           >
             <Button
+              onClick={handleSubmit}
               sx={{
                 width: "70%",
                 margin: "auto",
