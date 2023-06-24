@@ -3,12 +3,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import HelpIcon from "@mui/icons-material/Help";
 import { Box, Button, Divider } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
+
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
+
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import logo from "../../assets/logo.webp";
@@ -41,11 +39,11 @@ const Navbar = () => {
             padding: "6px 12px",
             border: "1px solid",
             lineHeight: 1.5,
-            backgroundColor: "#FFC3EE",
+            backgroundColor: "#db6378",
             borderColor: " .5px solid #000",
             margin: "10px",
             "&:hover": {
-              backgroundColor: "#FFC3EE",
+              backgroundColor: "#cc5a6e",
               // boxShadow: "none",
             },
             "&:active": {

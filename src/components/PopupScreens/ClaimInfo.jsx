@@ -1,46 +1,57 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import SendIcon from "@mui/icons-material/Send";
-import { Box, Button, Typography } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { Box, Button, Divider, Typography } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import { addDoc, doc, setDoc } from "firebase/firestore";
-
+import { arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 } from "uuid";
 import { dbInstance, storage } from "../../firebaseConfig";
-// import app from "../../firebaseConfig";
-import classes from "./MakeReport.module.css";
+import FinalDetails from "../PopupScreens/FinalDetails";
+import classes from "./ClaimInfo.module.css";
 
-const report = {
-  id: "",
+const claim = {
   name: "",
   srn: "",
   phone: "",
   classAndSec: "",
-  objName: "",
-  location: "",
-  details: "",
-  contactInfo: "",
-  imgUrl: "",
-  claimLogs: [],
+  idCardImgUrl: "",
 };
 
-const MakeReport = ({ closeDialog }) => {
+const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
   const [fileUploadStatus, setFileUploadStatus] = useState(false);
   const [imagePreview, setimagePreview] = useState();
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [makeReport, setMakeReport] = useState({
-    ...report,
-    id: v4(),
+  const [openFinal, setOpenFinal] = useState(false);
+
+  //helper functions for the last popUp to open
+  const handleFinalOpen = () => {
+    setOpenFinal(true);
+  };
+
+  const handleCloseFinal = () => {
+    setOpenFinal(false);
+    console.log("BRUH");
+    closeDetailsDialog();
+    closeClaimInfo();
+  };
+
+  //claimLogs updation
+  const [makeClaim, setMakeClaim] = useState({
+    ...claim,
   });
 
   const onTextChange = (e) => {
-    let changeReport = {
-      ...makeReport,
+    let changeClaim = {
+      ...makeClaim,
       [e.target.name]: e.target.value,
     };
-    setMakeReport(changeReport);
+
+    setMakeClaim(changeClaim);
   };
 
   //function to upload image to browser
@@ -50,12 +61,16 @@ const MakeReport = ({ closeDialog }) => {
     setUploadedImage(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
-    // if (uploadedImage === null) {
-    //   alert("select an image");
-    //   return;
-    // }
+  async function handleSubmit(e) {
+    if (uploadedImage === null) {
+      alert("ID Card is a must to claim lost items");
+      return;
+    }
+
+    //function to upload image
     async function uploadImage(imgData) {
+      //firebase function to upload the image
+      //imgData is the imgRef as a paramenter
       await uploadBytes(imgData, uploadedImage);
 
       //fetching the uploaded image url
@@ -64,81 +79,48 @@ const MakeReport = ({ closeDialog }) => {
     }
 
     async function sendSubmission() {
-      //code to upload image to firebase
-      const imageRef = ref(storage, `/${uploadedImage.name + v4()}`);
+      //creates reference to firebase
+      const imageRef = ref(storage, `idCards/${uploadedImage.name + v4()}`);
+      //uploads image and then gets image url
       const resUrl = await uploadImage(imageRef);
 
-      const updatedMakeReport = {
-        ...makeReport,
-        imgUrl: resUrl,
+      const updatedMakeClaim = {
+        ...makeClaim,
+        idCardImgUrl: resUrl,
       };
 
       //basic validation for the time being
-      if (makeReport.name && makeReport.srn && makeReport.objName !== "") {
+      if (makeClaim.name && makeClaim.srn && makeClaim.phone !== "") {
         try {
-          // sending the report object to firebase
-          // await addDoc(dbInstance, updatedMakeReport);
-          await setDoc(
-            doc(dbInstance, `${updatedMakeReport.id}`),
-            updatedMakeReport
-          );
-          alert("Report submitted to firebase");
+          //this gets the report ref hopefully
+          const reportRef = doc(dbInstance, `${data.id}`);
+          await updateDoc(reportRef, {
+            claimLogs: arrayUnion(updatedMakeClaim),
+          });
 
-          closeDialog();
+          alert("claim confirmed :)");
         } catch (err) {
           alert("Something went wrong :(");
           console.log(err.message);
         }
       } else {
-        alert("Fill all the nescecary input fields");
+        alert("Please enter your details to continue");
       }
 
-      setMakeReport(updatedMakeReport);
+      setMakeClaim(updatedMakeClaim);
+      return true;
     }
 
-    sendSubmission();
-
-    ///////////////////////////////////////////////
-    //////////////////////////////////////////////////
-    // const imageRef = ref(storage, `/${uploadedImage.name + v4()}`);
-    // uploadBytes(imageRef, uploadedImage).then(() => {
-    //   getDownloadURL(ref(storage, imageRef)).then((url) => {
-    //     console.log(url);
-    //     let changeReport = { ...makeReport, imgUrl: url };
-    //     setMakeReport(changeReport);
-    //   });
-
-    //   alert("image uploaded ");
-    //   // console.log(makeReport);
-    // });
-    // if (
-    //   makeReport.name &&
-    //   makeReport.srn &&
-    //   makeReport.objName  !== ""
-    // ) {
-    //   addDoc(dbInstance, makeReport)
-    //     .then(() => {
-    //       alert("Report submitted");
-    //     })
-    //     .catch((err) => {
-    //       alert("Something went wrong :(");
-    //       console.log(err.message);
-    //     });
-    // } else {
-    //   alert("Fill all the nescecary input fields");
-    // }
-
-    // alert("Posted successfully, you may now close the form");
-  };
+    const confirmation = await sendSubmission();
+    if (confirmation) {
+      handleFinalOpen();
+    }
+  }
 
   return (
     <>
-      {/* <DialogContent>
-      </DialogContent> */}
-
       <Box sx={{ display: "flex" }}>
         <Box
-          className={classes.inputContianter}
           sx={{
             overflow: "auto",
             maxHeight: "80vh",
@@ -161,7 +143,7 @@ const MakeReport = ({ closeDialog }) => {
               }}
               onChange={(e) => onTextChange(e)}
               name="name"
-              value={makeReport.name}
+              value={makeClaim.name}
             />
             <TextField
               id="outlined-basic"
@@ -175,11 +157,11 @@ const MakeReport = ({ closeDialog }) => {
               }}
               onChange={(e) => onTextChange(e)}
               name="srn"
-              value={makeReport.srn}
+              value={makeClaim.srn}
             />
             <TextField
               id="outlined-basic"
-              label="Phone Number (Optional)"
+              label="Phone Number"
               placeholder="+91 XXXXX XXXXX"
               variant="outlined"
               fullWidth
@@ -190,7 +172,7 @@ const MakeReport = ({ closeDialog }) => {
               }}
               onChange={(e) => onTextChange(e)}
               name="phone"
-              value={makeReport.phone}
+              value={makeClaim.phone}
             />
             <TextField
               id="outlined-basic"
@@ -204,78 +186,9 @@ const MakeReport = ({ closeDialog }) => {
               }}
               onChange={(e) => onTextChange(e)}
               name="classAndSec"
-              value={makeReport.classAndSec}
+              value={makeClaim.classAndSec}
             />
-            <TextField
-              id="outlined-basic"
-              label="Object Name"
-              placeholder="iPhone 13"
-              variant="outlined"
-              fullWidth
-              sx={{
-                boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                marginBottom: "2rem",
-              }}
-              onChange={(e) => onTextChange(e)}
-              name="objName"
-              value={makeReport.objName}
-            />
-            <TextField
-              id="outlined-basic"
-              label="Room no. or Location Name"
-              placeholder="Room 424 in SVB || Saughandhika || Foodcourt"
-              variant="outlined"
-              fullWidth
-              sx={{
-                boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                marginBottom: "2rem",
-              }}
-              onChange={(e) => onTextChange(e)}
-              name="location"
-              value={makeReport.location}
-            />
-            <TextField
-              id="outlined-basic"
-              label="More Details on where you found it"
-              placeholder="First bench in room 424 in SVB"
-              variant="outlined"
-              multiline
-              maxRows={4}
-              fullWidth
-              sx={{
-                boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                marginBottom: "2rem",
-              }}
-              onChange={(e) => onTextChange(e)}
-              name="details"
-              value={makeReport.details}
-            />
-            <span
-              style={{
-                letterSpacing: ".11ch",
-                opacity: ".5",
-                paddingLeft: "1rem",
-                fontSize: ".75rem",
-              }}
-            >
-              [optional if you've entered phone number]
-            </span>
-            <TextField
-              id="outlined-basic"
-              label="Addition means of reaching you"
-              placeholder="Your social media handles..."
-              variant="outlined"
-              multiline
-              rows={4}
-              fullWidth
-              sx={{
-                boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                margin: ".75rem 0",
-              }}
-              onChange={(e) => onTextChange(e)}
-              name="contactInfo"
-              value={makeReport.contactInfo}
-            />
+
             <Typography
               sx={{
                 mt: "2rem",
@@ -283,12 +196,12 @@ const MakeReport = ({ closeDialog }) => {
                 textAlign: "center",
               }}
             >
-              We request you to keep the item with you until the appropriate
-              person contacts you
-              <br /> 🙇‍♂️🙇‍♀️🙇‍♂️🙇‍♀️
+              Please dont go about claiming something thats not yours
+              <br /> (•́⁠ ⁠ ⁠‿⁠ ⁠,⁠•̀ ){" "}
             </Typography>
           </div>
         </Box>
+
         <Box
           className={classes.uploadContainer}
           sx={{
@@ -301,13 +214,13 @@ const MakeReport = ({ closeDialog }) => {
         >
           <Box
             className={classes.uploads}
-            sx={{ textAlign: "center", paddingTop: "25%" }}
+            sx={{ textAlign: "center", paddingTop: "10%" }}
           >
             {!fileUploadStatus && (
               <Box>
-                <Typography fontSize={"1.5rem"} sx={{ lineHeight: "4rem" }}>
+                <Typography fontSize={"1.5rem"} sx={{ paddingBottom: "1rem" }}>
                   {" "}
-                  Upload a clear image{" "}
+                  Upload a image of your REVA ID Card{" "}
                 </Typography>
                 <Box
                   sx={{
@@ -420,6 +333,17 @@ const MakeReport = ({ closeDialog }) => {
                 </Box>
               </Box>
             )}
+            <Typography
+              style={{
+                letterSpacing: ".11ch",
+                opacity: ".5",
+                padding: "1rem 1rem 1rem 1rem",
+                fontSize: ".9rem",
+              }}
+            >
+              This is for extra security measure, Your ID card wont be made
+              public
+            </Typography>
           </Box>
           <Box
             className={classes.button}
@@ -431,7 +355,6 @@ const MakeReport = ({ closeDialog }) => {
           >
             <Button
               onClick={handleSubmit}
-              // onClick={closeDialog}
               sx={{
                 width: "70%",
                 margin: "auto",
@@ -464,15 +387,48 @@ const MakeReport = ({ closeDialog }) => {
               size="large"
               variant="contained"
               endIcon={
-                <SendIcon
+                <CheckCircleIcon
                   style={{
                     fontSize: "1.5em",
                   }}
                 />
               }
             >
-              POST
+              Confirm
             </Button>{" "}
+            <Dialog
+              open={openFinal}
+              onClose={handleCloseFinal}
+              maxWidth={"lg"}
+              fullWidth={true}
+              style={{ overflow: "hidden", borderRadius: "20px" }}
+            >
+              <DialogTitle
+                sx={{
+                  m: 0,
+                  px: "2rem",
+                  fontSize: "2.5em",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>Complete Details</span>
+                <IconButton
+                  aria-label="close"
+                  onClick={handleCloseFinal}
+                  sx={
+                    {
+                      // color: (theme) => theme.palette.grey[500],
+                    }
+                  }
+                >
+                  <CancelIcon sx={{ color: "red", fontSize: "45px" }} />
+                </IconButton>
+              </DialogTitle>
+              <Divider />
+              {/* here is the content */}
+              <FinalDetails data={data} />
+            </Dialog>
           </Box>
         </Box>
       </Box>
@@ -485,4 +441,4 @@ const MakeReport = ({ closeDialog }) => {
   );
 };
 
-export default MakeReport;
+export default ClaimInfo;
