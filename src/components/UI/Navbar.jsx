@@ -10,6 +10,7 @@ import { useMediaQuery } from "react-responsive";
 
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.webp";
 import MakeReport from "../NewReport/MakeReport";
 import MobileMakeReport from "../NewReport/Mobile-MakeReport";
@@ -102,19 +103,25 @@ const Navbar = () => {
             <MakeReport closeDialog={handleClose} />
           )}
         </Dialog>
-        <IconButton
-          color="primary"
-          aria-label="help"
-          sx={{
-            color: "#000",
-            margin: 0,
-            "&:active": {
-              transform: "scale(0.9)",
-            },
-          }}
-        >
-          <HelpIcon style={{ fontSize: 40 }} />
-        </IconButton>
+        <Link to="/info">
+          <IconButton
+            color="primary"
+            aria-label="help"
+            sx={{
+              color: "#000",
+              margin: 0,
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+              "&:active": {
+                transform: "scale(0.9)",
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            <HelpIcon sx={{ fontSize: 40 }} />
+          </IconButton>
+        </Link>
       </div>
     </nav>
   );
