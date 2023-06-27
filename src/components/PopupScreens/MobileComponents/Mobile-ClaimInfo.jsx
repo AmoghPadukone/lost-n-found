@@ -11,10 +11,9 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { v4 } from "uuid";
-import { dbInstance, storage } from "../../firebaseConfig";
-import FinalDetails from "../PopupScreens/FinalDetails";
-import classes from "./ClaimInfo.module.css";
-import MobileFinalDetails from "./MobileFinalDetails";
+import { dbInstance, storage } from "../../../firebaseConfig";
+import FinalDetails from "../FinalDetails";
+import MobileFinalDetails from "../MobileFinalDetails";
 
 const claim = {
   name: "",
@@ -24,7 +23,7 @@ const claim = {
   idCardImgUrl: "",
 };
 
-const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
+const MobileClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
   const [fileUploadStatus, setFileUploadStatus] = useState(false);
   const [imagePreview, setimagePreview] = useState();
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -122,12 +121,160 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            // width: "100%",
+            display: "flex",
+            flexDirection: "column",
+
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ textAlign: "center", paddingTop: "5%" }}>
+            {!fileUploadStatus && (
+              <Box sx={{ padding: "0 1.5rem" }}>
+                <Typography fontSize={"1.5rem"} sx={{ paddingBottom: "1rem" }}>
+                  {" "}
+                  Upload a image of your REVA ID Card{" "}
+                </Typography>
+                <Box
+                  sx={{
+                    padding: "6rem",
+                    display: "flex",
+                    borderRadius: "10px",
+                    border: "2.5px solid ",
+                    margin: "auto",
+                    maxWidth: "350px",
+                  }}
+                >
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                    sx={{
+                      position: "relative",
+                      margin: "auto",
+                      width: "100%",
+                    }}
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleUpload}
+                    />
+                    {}
+                    <AddPhotoAlternateIcon
+                      fontSize={"large"}
+                      sx={{
+                        color: "#000",
+                        fontSize: "3em",
+                        "&:hover": {
+                          //   backgroundColor: "#E5FFD1",
+                          //   borderColor: "#E5FFD1",
+                          transition: "all .3s",
+                          padding: "5%",
+                          borderRadius: "50%",
+                          boxShadow: " 5px 5px 1px rgb(0,0,0)",
+                          border: "2px solid #000",
+                        },
+                        "&:active": { transform: "scale(.9)" },
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+              </Box>
+            )}
+            {fileUploadStatus && (
+              <Box>
+                <Box
+                  sx={
+                    {
+                      // display: "inline-flex",
+                      // borderRadius: "10px",
+                      // border: "2.5px solid ",
+                    }
+                  }
+                >
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                    sx={{
+                      position: "relative",
+                      margin: "auto",
+                      //   width: "100%",
+                    }}
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleUpload}
+                    />
+                    {}
+                    <AddPhotoAlternateIcon
+                      fontSize={"large"}
+                      sx={{
+                        color: "#000",
+                        fontSize: "2em",
+                        "&:hover": {
+                          //   backgroundColor: "#E5FFD1",
+                          //   borderColor: "#E5FFD1",
+                          transition: "all .3s",
+                          // padding: "5%",
+                          borderRadius: "50%",
+                          boxShadow: " 5px 5px 1px rgb(0,0,0)",
+                          border: "2px solid #000",
+                        },
+                        "&:active": { transform: "scale(.9)" },
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+
+                <Box
+                  sx={{
+                    // padding: "7px 0px 10px 10px",
+                    margin: "5%",
+                    borderRadius: "10px",
+                    border: "2.5px solid ",
+                  }}
+                >
+                  <img
+                    src={imagePreview}
+                    style={{
+                      maxWidth: "80%",
+                      height: "100%",
+                      objectFit: "cover",
+                      margin: "5%",
+                    }}
+                    id="outputImage"
+                    alt="user uploaded image"
+                  />
+                </Box>
+              </Box>
+            )}
+            <Typography
+              style={{
+                letterSpacing: ".11ch",
+                opacity: ".5",
+                padding: "1rem 1rem 1rem 1rem",
+                fontSize: ".9rem",
+              }}
+            >
+              This is for extra security measure, Your ID card wont be made
+              public
+            </Typography>
+          </Box>
+        </Box>
+
         <Box
           sx={{
             overflow: "auto",
-            maxHeight: "80vh",
-            width: "180%",
+            // maxHeight: "80vh",
+            // width: "180%",
           }}
         >
           <div style={{ minWidth: "100%", padding: " 5% 10%" }}>
@@ -191,252 +338,106 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
               name="classAndSec"
               value={makeClaim.classAndSec}
             />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: "10%",
+              }}
+            >
+              <Button
+                onClick={handleSubmit}
+                sx={{
+                  width: "100%",
 
+                  margin: "auto",
+                  // padding: "1.1em 0",
+                  fontSize: "1.5rem",
+                  color: "#000",
+                  backgroundColor: "#E5FFD1",
+                  border: "1px solid #000",
+                  // boxShadow: " 5px 5px  rgb(0,0,0)",
+                  borderRadius: "10px",
+
+                  "&:hover": {
+                    boxShadow: " 5px 5px  rgb(0,0,0)",
+                    backgroundColor: "#E5FFD1",
+
+                    border: "2px solid #000",
+                    //   border: "2px solid #000",
+                  },
+                  "&:active": {
+                    backgroundColor: "#E5FFD1",
+
+                    boxShadow: " none",
+                    transform: "translate(5px ,5px)",
+                    //   transform: "scale(.9)",
+                    transition: "none",
+                    border: "2px solid #000",
+                  },
+                }}
+                disableElevation
+                size="large"
+                variant="contained"
+                endIcon={
+                  <CheckCircleIcon
+                    style={{
+                      fontSize: "1.5em",
+                    }}
+                  />
+                }
+              >
+                Confirm
+              </Button>{" "}
+              <Dialog
+                open={openFinal}
+                onClose={handleCloseFinal}
+                maxWidth={"lg"}
+                fullWidth={true}
+                style={{ overflow: "hidden", borderRadius: "20px" }}
+              >
+                <DialogTitle
+                  sx={{
+                    fontSize: "1.5rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span>Complete Details</span>
+                  <IconButton
+                    aria-label="close"
+                    onClick={handleCloseFinal}
+                    sx={
+                      {
+                        // color: (theme) => theme.palette.grey[500],
+                      }
+                    }
+                  >
+                    <CancelIcon sx={{ color: "red", fontSize: "2rem" }} />
+                  </IconButton>
+                </DialogTitle>
+                <Divider />
+                {/* here is the content */}
+                {isMobile ? (
+                  <MobileFinalDetails data={data} />
+                ) : (
+                  <FinalDetails data={data} />
+                )}
+              </Dialog>
+            </Box>
             <Typography
               sx={{
                 mt: "2rem",
                 letterSpacing: ".15ch",
                 textAlign: "center",
+                fontSize: ".8rem",
               }}
             >
               Please dont go about claiming something thats not yours
               <br /> (•́⁠ ⁠ ⁠‿⁠ ⁠,⁠•̀ ){" "}
             </Typography>
           </div>
-        </Box>
-
-        <Box
-          className={classes.uploadContainer}
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-
-            justifyContent: "space-between",
-          }}
-        >
-          <Box
-            className={classes.uploads}
-            sx={{ textAlign: "center", paddingTop: "10%" }}
-          >
-            {!fileUploadStatus && (
-              <Box sx={{ padding: "0 1.5rem" }}>
-                <Typography fontSize={"1.5rem"} sx={{ paddingBottom: "1rem" }}>
-                  {" "}
-                  Upload a image of your REVA ID Card{" "}
-                </Typography>
-                <Box
-                  sx={{
-                    padding: "7rem",
-                    // display: "inline-flex",
-                    borderRadius: "10px",
-                    border: "2.5px solid ",
-                  }}
-                >
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="label"
-                    sx={{
-                      position: "relative",
-                      margin: "auto",
-                      width: "100%",
-                    }}
-                  >
-                    <input
-                      hidden
-                      accept="image/*"
-                      type="file"
-                      onChange={handleUpload}
-                    />
-                    {}
-                    <AddPhotoAlternateIcon
-                      fontSize={"large"}
-                      sx={{
-                        color: "#000",
-                        fontSize: "3em",
-                        "&:hover": {
-                          //   backgroundColor: "#E5FFD1",
-                          //   borderColor: "#E5FFD1",
-                          transition: "all .3s",
-                          padding: "5%",
-                          borderRadius: "50%",
-                          boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                          border: "2px solid #000",
-                        },
-                        "&:active": { transform: "scale(.9)" },
-                      }}
-                    />
-                  </IconButton>
-                </Box>
-              </Box>
-            )}
-            {fileUploadStatus && (
-              <Box>
-                <Box
-                  sx={{
-                    display: "inline-flex",
-                    // borderRadius: "10px",
-                    // border: "2.5px solid ",
-                  }}
-                >
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="label"
-                    sx={{
-                      position: "relative",
-                      margin: "auto",
-                      width: "100%",
-                    }}
-                  >
-                    <input
-                      hidden
-                      accept="image/*"
-                      type="file"
-                      onChange={handleUpload}
-                    />
-                    {}
-                    <AddPhotoAlternateIcon
-                      fontSize={"large"}
-                      sx={{
-                        color: "#000",
-                        fontSize: "2em",
-                        "&:hover": {
-                          //   backgroundColor: "#E5FFD1",
-                          //   borderColor: "#E5FFD1",
-                          transition: "all .3s",
-                          padding: "5%",
-                          borderRadius: "50%",
-                          boxShadow: " 5px 5px 1px rgb(0,0,0)",
-                          border: "2px solid #000",
-                        },
-                        "&:active": { transform: "scale(.9)" },
-                      }}
-                    />
-                  </IconButton>
-                </Box>
-
-                <Box
-                  sx={{
-                    // padding: "7px 0px 10px 10px",
-                    margin: "5px",
-                    borderRadius: "10px",
-                    border: "2.5px solid ",
-                  }}
-                >
-                  <img
-                    src={imagePreview}
-                    style={{ objectFit: "cover", margin: "5px" }}
-                    id="outputImage"
-                    alt="user uploaded image"
-                    width="350"
-                    height="400"
-                  />
-                </Box>
-              </Box>
-            )}
-            <Typography
-              style={{
-                letterSpacing: ".11ch",
-                opacity: ".5",
-                padding: "1rem 1rem 1rem 1rem",
-                fontSize: ".9rem",
-              }}
-            >
-              This is for extra security measure, Your ID card wont be made
-              public
-            </Typography>
-          </Box>
-          <Box
-            className={classes.button}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              paddingBottom: "10%",
-            }}
-          >
-            <Button
-              onClick={handleSubmit}
-              sx={{
-                width: "70%",
-                margin: "auto",
-                // padding: "1.1em 0",
-                fontSize: "1.5rem",
-                color: "#000",
-                backgroundColor: "#E5FFD1",
-                border: "1px solid #000",
-                // boxShadow: " 5px 5px  rgb(0,0,0)",
-                borderRadius: "10px",
-
-                "&:hover": {
-                  boxShadow: " 5px 5px  rgb(0,0,0)",
-                  backgroundColor: "#E5FFD1",
-
-                  border: "2px solid #000",
-                  //   border: "2px solid #000",
-                },
-                "&:active": {
-                  backgroundColor: "#E5FFD1",
-
-                  boxShadow: " none",
-                  transform: "translate(5px ,5px)",
-                  //   transform: "scale(.9)",
-                  transition: "none",
-                  border: "2px solid #000",
-                },
-              }}
-              disableElevation
-              size="large"
-              variant="contained"
-              endIcon={
-                <CheckCircleIcon
-                  style={{
-                    fontSize: "1.5em",
-                  }}
-                />
-              }
-            >
-              Confirm
-            </Button>{" "}
-            <Dialog
-              open={openFinal}
-              onClose={handleCloseFinal}
-              maxWidth={"lg"}
-              fullWidth={true}
-              style={{ overflow: "hidden", borderRadius: "20px" }}
-            >
-              <DialogTitle
-                sx={{
-                  m: 0,
-                  px: "2rem",
-                  fontSize: "2.5em",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>Complete Details</span>
-                <IconButton
-                  aria-label="close"
-                  onClick={handleCloseFinal}
-                  sx={
-                    {
-                      // color: (theme) => theme.palette.grey[500],
-                    }
-                  }
-                >
-                  <CancelIcon sx={{ color: "red", fontSize: "45px" }} />
-                </IconButton>
-              </DialogTitle>
-              <Divider />
-              {/* here is the content */}
-              {isMobile ? (
-                <MobileFinalDetails data={data} />
-              ) : (
-                <FinalDetails data={data} />
-              )}
-            </Dialog>
-          </Box>
         </Box>
       </Box>
 
@@ -448,4 +449,4 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
   );
 };
 
-export default ClaimInfo;
+export default MobileClaimInfo;

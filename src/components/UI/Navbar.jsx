@@ -6,15 +6,18 @@ import Dialog from "@mui/material/Dialog";
 
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
+import { useMediaQuery } from "react-responsive";
 
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import logo from "../../assets/logo.webp";
 import MakeReport from "../NewReport/MakeReport";
+import MobileMakeReport from "../NewReport/Mobile-MakeReport";
 import classes from "./Navbar.module.css";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 750 });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,18 +33,19 @@ const Navbar = () => {
         <Button
           onClick={handleClickOpen}
           sx={{
+            minWidth: "50%",
             color: "#000",
             borderRadius: "8px",
             // boxShadow: "none",
             textTransform: "none",
-            fontSize: 18,
+            fontSize: "1rem",
             fontWeight: "900",
-            padding: "6px 12px",
+            // padding: "6px 12px",
             border: "1px solid",
             lineHeight: 1.5,
             backgroundColor: "#db6378",
             borderColor: " .5px solid #000",
-            margin: "10px",
+            // margin: "10px",
             "&:hover": {
               backgroundColor: "#cc5a6e",
               // boxShadow: "none",
@@ -54,7 +58,7 @@ const Navbar = () => {
           startIcon={
             <AddSharpIcon
               style={{
-                fontSize: "1.5em",
+                fontSize: "1.2rem",
               }}
             />
           }
@@ -72,7 +76,7 @@ const Navbar = () => {
             sx={{
               m: 0,
               px: "2rem",
-              fontSize: "2.5em",
+              fontSize: "2rem",
               display: "flex",
               justifyContent: "space-between",
             }}
@@ -91,7 +95,12 @@ const Navbar = () => {
             </IconButton>
           </DialogTitle>
           <Divider />
-          <MakeReport closeDialog={handleClose} />
+
+          {isMobile ? (
+            <MobileMakeReport closeDialog={handleClose} />
+          ) : (
+            <MakeReport closeDialog={handleClose} />
+          )}
         </Dialog>
         <IconButton
           color="primary"

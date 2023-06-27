@@ -8,8 +8,10 @@ import MakeReport from "../NewReport/MakeReport";
 // import app from "../../firebaseConfig";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import ClaimInfo from "./ClaimInfo";
 import classes from "./Details.module.css";
+import MobileClaimInfo from "./MobileComponents/Mobile-ClaimInfo";
 const StyledBox = styled(Box)`
   box-shadow: 5px 5px 1px rgb(0, 0, 0);
   border: 1px solid #000;
@@ -34,6 +36,7 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
   const handleClaimOpen = (e) => {
     setOpenClaim(true);
   };
+  const isMobile = useMediaQuery({ maxWidth: 750 });
 
   return (
     <>
@@ -43,6 +46,7 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
             overflow: "auto",
             maxHeight: "80vh",
             width: "180%",
+            // height: "120%",
           }}
         >
           <div style={{ minWidth: "100%", padding: " 5% 10%" }}>
@@ -121,49 +125,47 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
             </Typography>
           </div>
         </Box>
+
         <Box
           className={classes.uploadContainer}
+          id="sdaa"
           sx={{
             width: "100%",
+            // height: "100%",
             display: "flex",
             flexDirection: "column",
             // alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
             paddingTop: "2%",
+            gap: "4rem",
           }}
         >
-          <Box
-            className={classes.uploads}
-            sx={{ textAlign: "center", paddingTop: "5%" }}
-          >
-            <Box>
-              <Box
-                sx={{
-                  // padding: "7px 0px 10px 10px",
-                  margin: "15px",
-                  padding: "5%",
-                  borderRadius: "10px",
-                  border: "2.5px solid ",
+          <Box sx={{ textAlign: "center", paddingTop: "5%", margin: "auto" }}>
+            <Box
+              sx={{
+                // padding: "7px 0px 10px 10px",
+                margin: "15px",
+                padding: "5%",
+                borderRadius: "10px",
+                border: "2.5px solid ",
+              }}
+            >
+              <img
+                src={data.imgUrl}
+                style={{
+                  objectFit: "contain",
+                  // margin: "5px",
+                  // boxShadow: "10px 10px 1px rgb(0, 0, 0)",
+                  // border: "2.5px solid #000 ",
+                  maxHeight: "50vh",
                 }}
-              >
-                <img
-                  src={data.imgUrl}
-                  style={{
-                    objectFit: "contain",
-                    // margin: "5px",
-                    // boxShadow: "10px 10px 1px rgb(0, 0, 0)",
-                    // border: "2.5px solid #000 ",
-                    maxHeight: "50vh",
-                  }}
-                  id="outputImage"
-                  alt="user uploaded image"
-                  width="100%"
-                />
-              </Box>
+                id="outputImage"
+                alt="user uploaded image"
+                width="100%"
+              />
             </Box>
           </Box>
           <Box
-            className={classes.button}
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -174,6 +176,7 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
               onClick={handleClaimOpen}
               // onClick={closeDialog}
               sx={{
+                justifySelf: "flex-end",
                 width: "70%",
                 margin: "auto",
                 // padding: "1.1em 0",
@@ -244,11 +247,19 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
                 </IconButton>
               </DialogTitle>
               <Divider />
-              <ClaimInfo
-                data={data}
-                closeDetailsDialog={closeDetailsDialog}
-                closeClaimInfo={handleClaimClose}
-              />
+              {isMobile ? (
+                <MobileClaimInfo
+                  data={data}
+                  closeDetailsDialog={closeDetailsDialog}
+                  closeClaimInfo={handleClaimClose}
+                />
+              ) : (
+                <ClaimInfo
+                  data={data}
+                  closeDetailsDialog={closeDetailsDialog}
+                  closeClaimInfo={handleClaimClose}
+                />
+              )}
             </Dialog>
           </Box>
         </Box>

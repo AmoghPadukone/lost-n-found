@@ -14,15 +14,14 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useMediaQuery } from "react-responsive";
 
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
-import dummyImage from "../../assets/dummyImg.png";
-import MakeReport from "../NewReport/MakeReport";
 import Details from "../PopupScreens/Details";
-
+import MobileDetails from "../PopupScreens/MobileComponents/Mobile-Details";
 export default function ReportCard({ data }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -33,6 +32,7 @@ export default function ReportCard({ data }) {
   const handleDetailsClose = () => {
     setDetailsOpen(false);
   };
+  const isMobile = useMediaQuery({ maxWidth: 750 });
   return (
     <Card
       sx={{
@@ -99,22 +99,40 @@ export default function ReportCard({ data }) {
             <IconButton
               aria-label="close"
               onClick={handleDetailsClose}
-              sx={
-                {
-                  // color: (theme) => theme.palette.grey[500],
-                }
-              }
+              sx={{
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
+                // color: (theme) => theme.palette.grey[500],
+              }}
             >
-              <CancelIcon sx={{ color: "red", fontSize: "45px" }} />
+              <CancelIcon
+                sx={{
+                  color: "red",
+                  fontSize: "2.5rem",
+                  "&:hover": {
+                    transform: "scale(1.3)",
+                    transition: "all .2s",
+                  },
+                }}
+              />
             </IconButton>
           </DialogTitle>
           <Divider />
           {/* here is the content */}
-          <Details
-            data={data}
-            openDeatilsDialog={handleDetailsOpen}
-            closeDetailsDialog={handleDetailsClose}
-          />
+          {isMobile ? (
+            <MobileDetails
+              data={data}
+              openDeatilsDialog={handleDetailsOpen}
+              closeDetailsDialog={handleDetailsClose}
+            />
+          ) : (
+            <Details
+              data={data}
+              openDeatilsDialog={handleDetailsOpen}
+              closeDetailsDialog={handleDetailsClose}
+            />
+          )}
         </Dialog>
       </CardActions>
     </Card>

@@ -8,8 +8,6 @@ function App() {
   return (
     <>
       <Navbar />
-
-      {/* <ReportCard /> */}
       <Posts />
       <Footer />
     </>
