@@ -76,7 +76,7 @@ const Info = (props) => {
                   component="img"
                   height="200"
                   sx={{ objectFit: "contain", padding: "5px 0 0 0" }}
-                  image="src/assets/report.png"
+                  image="https://firebasestorage.googleapis.com/v0/b/lostnfound-2023.appspot.com/o/temp%2Freport.png?alt=media&token=555b06df-c94a-4cf9-91f8-46bd1149d013"
                   alt=""
                 />
                 <CardContent>
@@ -146,7 +146,7 @@ const Info = (props) => {
                   component="img"
                   height="200"
                   sx={{ objectFit: "contain", padding: "5px 0 0 0" }}
-                  image="src/assets/claim.png"
+                  image="https://firebasestorage.googleapis.com/v0/b/lostnfound-2023.appspot.com/o/temp%2Fclaim.png?alt=media&token=d87f76e5-6414-46bc-8e0d-fe6b14c09525"
                   alt="{info.imageAlt}"
                 />
                 <CardContent>
@@ -197,7 +197,7 @@ const Info = (props) => {
                 </IconButton>
               </DialogTitle>
 
-              <img src={claimStep1} alt="" loading="lazy" />
+              <img src={claimStep1} alt="" />
               <img src={claimStep2} alt="" loading="lazy" />
               <img src={claimStep3} alt="" loading="lazy" />
             </Dialog>
@@ -227,7 +227,7 @@ const Info = (props) => {
                   component="img"
                   height="200"
                   sx={{ objectFit: "contain", padding: "5px 0 0 0" }}
-                  image="src/assets/sad.png"
+                  image="https://firebasestorage.googleapis.com/v0/b/lostnfound-2023.appspot.com/o/temp%2Fsad.png?alt=media&token=11143858-4a78-41cf-875f-cd61fa764b50"
                   alt=""
                 />
                 <CardContent>
@@ -278,7 +278,7 @@ const Info = (props) => {
                 </IconButton>
               </DialogTitle>
 
-              <img src={WrongClaimStep1} alt="" loading="lazy" />
+              <img src={WrongClaimStep1} alt="" />
               <img src={WrongClaimStep2} alt="" loading="lazy" />
               <img src={WrongClaimStep3} alt="" loading="lazy" />
             </Dialog>
