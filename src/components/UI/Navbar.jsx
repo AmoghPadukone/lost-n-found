@@ -29,7 +29,9 @@ const Navbar = () => {
   };
   return (
     <nav className={classes.navbar}>
-      <img className={classes.logo} src={logo} alt="logo"></img>
+      <Link to="/">
+        <img className={classes.logo} src={logo} alt="logo"></img>
+      </Link>
       <div>
         <Button
           onClick={handleClickOpen}

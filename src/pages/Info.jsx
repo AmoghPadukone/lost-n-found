@@ -1,18 +1,55 @@
-import { Box, Button, Grid } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { Box, Button, CardActionArea, Divider, Grid } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { getDocs } from "firebase/firestore";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import claim from "../assets/claim.png";
 import Footer from "../components/UI/Footer";
 import GithubButton from "../components/UI/GithubButton";
 import InfoCard from "../components/UI/InfoCard";
 import Navbar from "../components/UI/Navbar";
+//images
+import reportImg from "../assets/Report-help content.webp";
+import WrongClaimStep1 from "../assets/WrongClaim1.webp";
+import WrongClaimStep2 from "../assets/WrongClaim2.webp";
+import WrongClaimStep3 from "../assets/WrongClaim3.webp";
+import claimStep1 from "../assets/claim1.webp";
+import claimStep2 from "../assets/claim2.webp";
+import claimStep3 from "../assets/claim3.webp";
 
 const Info = (props) => {
-  const posts = [
-    { title: "Here to report a article? ", image: "", imageAlt: "" },
-    { title: "Here to claim a article as yours? ", image: "", imageAlt: "" },
-    { title: "Someone else claimed your belongings?", image: "", imageAlt: "" },
-  ];
+  const [openReportDialog, setOpenReportDialog] = useState(false);
+  const handleOpenReportDialog = () => {
+    setOpenReportDialog(true);
+  };
+
+  const handleCloseReportDialog = () => {
+    setOpenReportDialog(false);
+  };
+  const [openClaimDialog, setOpenClaimDialog] = useState(false);
+  const handleOpenClaimDialog = () => {
+    setOpenClaimDialog(true);
+  };
+
+  const handleCloseClaimDialog = () => {
+    setOpenClaimDialog(false);
+  };
+  const [openWrongClaim, setOpenWrongClaim] = useState(false);
+  const handleOpenWrongClaim = () => {
+    setOpenWrongClaim(true);
+  };
+
+  const handleCloseWrongClaim = () => {
+    setOpenWrongClaim(false);
+  };
   return (
     <>
       <Navbar />
@@ -26,14 +63,75 @@ const Info = (props) => {
             md={4}
             xl={4}
           >
-            <InfoCard
+            {/* <InfoCard
               info={{
                 title: "Here to report a article? ",
                 image: "src/assets/report.png",
                 imageAlt: "",
               }}
-            />
+            /> */}
+            <Card sx={{ border: "1px solid #000", borderRadius: "10px" }}>
+              <CardActionArea onClick={handleOpenReportDialog}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  sx={{ objectFit: "contain", padding: "5px 0 0 0" }}
+                  image="src/assets/report.png"
+                  alt=""
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ textAlign: "center" }}
+                  >
+                    Here to report a article?
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ textAlign: "center" }}
+                  >
+                    [Click to open a step by step guide]
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+            <Dialog
+              open={openReportDialog}
+              onClose={handleCloseReportDialog}
+              maxWidth={"lg"}
+              fullWidth={true}
+              style={{ overflow: "hidden", borderRadius: "20px" }}
+            >
+              <DialogTitle
+                sx={{
+                  m: 0,
+                  // px: "2rem",
+                  fontSize: "1rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <IconButton
+                  aria-label="close"
+                  onClick={handleCloseReportDialog}
+                  sx={{
+                    marginLeft: "auto",
+                    // color: (theme) => theme.palette.grey[500],
+                  }}
+                >
+                  <CancelIcon sx={{ color: "red", fontSize: "50px" }} />
+                </IconButton>
+              </DialogTitle>
+
+              <img src={reportImg} alt="" />
+            </Dialog>
           </Grid>
+
+          {/* /////////////////// */}
+
           <Grid
             sx={{ wordWrap: "break-word" }}
             item
@@ -42,14 +140,71 @@ const Info = (props) => {
             md={4}
             xl={4}
           >
-            <InfoCard
-              info={{
-                title: "Here to claim a article as yours?  ",
-                image: "src/assets/claim.png",
-                imageAlt: "",
-              }}
-            />
+            <Card sx={{ border: "1px solid #000", borderRadius: "10px" }}>
+              <CardActionArea onClick={handleOpenClaimDialog}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  sx={{ objectFit: "contain", padding: "5px 0 0 0" }}
+                  image="src/assets/claim.png"
+                  alt="{info.imageAlt}"
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ textAlign: "center" }}
+                  >
+                    Here to claim a article as yours?
+                    {/* Here to report a article? */}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ textAlign: "center" }}
+                  >
+                    [Click to open a step by step guide]
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+            <Dialog
+              open={openClaimDialog}
+              onClose={handleCloseClaimDialog}
+              maxWidth={"lg"}
+              fullWidth={true}
+              style={{ overflow: "hidden", borderRadius: "20px" }}
+            >
+              <DialogTitle
+                sx={{
+                  m: 0,
+                  // px: "2rem",
+                  fontSize: "1rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <IconButton
+                  aria-label="close"
+                  onClick={handleCloseClaimDialog}
+                  sx={{
+                    marginLeft: "auto",
+                    // color: (theme) => theme.palette.grey[500],
+                  }}
+                >
+                  <CancelIcon sx={{ color: "red", fontSize: "50px" }} />
+                </IconButton>
+              </DialogTitle>
+
+              <img src={claimStep1} alt="" loading="lazy" />
+              <img src={claimStep2} alt="" loading="lazy" />
+              <img src={claimStep3} alt="" loading="lazy" />
+            </Dialog>
           </Grid>
+
+          {/* \\\\\\\\\\\\\\\\\ */}
+
           <Grid
             sx={{ wordWrap: "break-word" }}
             item
@@ -58,13 +213,75 @@ const Info = (props) => {
             md={4}
             xl={4}
           >
-            <InfoCard
+            {/* <InfoCard
               info={{
                 title: "Someone  claimed your belongings? ",
                 image: "src/assets/sad.png",
                 imageAlt: "",
               }}
-            />
+            /> */}
+
+            <Card sx={{ border: "1px solid #000", borderRadius: "10px" }}>
+              <CardActionArea onClick={handleOpenWrongClaim}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  sx={{ objectFit: "contain", padding: "5px 0 0 0" }}
+                  image="src/assets/sad.png"
+                  alt=""
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ textAlign: "center" }}
+                  >
+                    Someone claimed your belongings?
+                    {/* Here to report a article? */}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ textAlign: "center" }}
+                  >
+                    [Click to open a step by step guide]
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+            <Dialog
+              open={openWrongClaim}
+              onClose={handleCloseWrongClaim}
+              maxWidth={"lg"}
+              fullWidth={true}
+              style={{ overflow: "hidden", borderRadius: "20px" }}
+            >
+              <DialogTitle
+                sx={{
+                  m: 0,
+                  // px: "2rem",
+                  fontSize: "1rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <IconButton
+                  aria-label="close"
+                  onClick={handleCloseWrongClaim}
+                  sx={{
+                    marginLeft: "auto",
+                    // color: (theme) => theme.palette.grey[500],
+                  }}
+                >
+                  <CancelIcon sx={{ color: "red", fontSize: "50px" }} />
+                </IconButton>
+              </DialogTitle>
+
+              <img src={WrongClaimStep1} alt="" loading="lazy" />
+              <img src={WrongClaimStep2} alt="" loading="lazy" />
+              <img src={WrongClaimStep3} alt="" loading="lazy" />
+            </Dialog>
           </Grid>
         </Grid>
         <Box
