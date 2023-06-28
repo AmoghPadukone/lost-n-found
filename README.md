@@ -17,8 +17,7 @@ https://lostnfound-2023.web.app/
 
 
 ## Screenshots
-![scrnli_28_06_2023_15-11-28](https://github.com/AmoghPadukone/lost-n-found/assets/35802992/8591b0cd-4d7a-4613-afe7-d487d0e0117e)
-![scrnli_28_06_2023_15-11-29](https://github.com/AmoghPadukone/lost-n-found/assets/35802992/194acbb1-da64-4f0e-a9e4-51e810037835)
+![scrnli_28_06_2023_15-26-36](https://github.com/AmoghPadukone/lost-n-found/assets/35802992/c0298254-d42a-45e7-bd4c-aa53a436d7eb)
 ![scrnli_28_06_2023_15-11-31](https://github.com/AmoghPadukone/lost-n-found/assets/35802992/0507f596-ecda-43dc-af94-78fe74562dd9)
 
 
