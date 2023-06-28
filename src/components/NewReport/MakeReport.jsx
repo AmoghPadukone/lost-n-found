@@ -299,19 +299,20 @@ const MakeReport = ({ closeDialog }) => {
             justifyContent: "space-between",
           }}
         >
-          <Box
-            className={classes.uploads}
-            sx={{ textAlign: "center", paddingTop: "25%" }}
-          >
+          <Box className={classes.uploads} sx={{ textAlign: "center" }}>
             {!fileUploadStatus && (
               <Box>
-                <Typography fontSize={"1.5rem"} sx={{ lineHeight: "4rem" }}>
+                <Typography
+                  fontSize={"1.5rem"}
+                  sx={{ lineHeight: "4rem", paddingTop: "20%" }}
+                >
                   {" "}
                   Upload a clear image{" "}
                 </Typography>
                 <Box
                   sx={{
-                    padding: "7rem",
+                    margin: "1rem",
+                    padding: "6rem",
                     display: "inline-flex",
                     borderRadius: "10px",
                     border: "2.5px solid ",
@@ -362,6 +363,7 @@ const MakeReport = ({ closeDialog }) => {
                     display: "inline-flex",
                     // borderRadius: "10px",
                     // border: "2.5px solid ",
+                    paddingTop: "10%",
                   }}
                 >
                   <IconButton
@@ -404,7 +406,7 @@ const MakeReport = ({ closeDialog }) => {
                 <Box
                   sx={{
                     // padding: "7px 0px 10px 10px",
-                    margin: "5px",
+                    margin: "1rem",
                     borderRadius: "10px",
                     border: "2.5px solid ",
                   }}
@@ -434,6 +436,7 @@ const MakeReport = ({ closeDialog }) => {
               // onClick={closeDialog}
               sx={{
                 width: "70%",
+                height: "70px",
                 margin: "auto",
                 // padding: "1.1em 0",
                 fontSize: "1.5rem",
