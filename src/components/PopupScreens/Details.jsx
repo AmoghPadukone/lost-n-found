@@ -101,7 +101,7 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
                     fontSize: ".8rem",
                   }}
                 >
-                  No one has claim this lost item yet
+                  No one has claimed this lost item yet
                 </p>
               )}
               {data.claimLogs.length >= 1 && (
@@ -178,6 +178,7 @@ const Details = ({ data, openDeatilsDialog, closeDetailsDialog }) => {
               sx={{
                 justifySelf: "flex-end",
                 width: "70%",
+                height: "65px",
                 margin: "auto",
                 // padding: "1.1em 0",
                 fontSize: "1.5rem",

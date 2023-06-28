@@ -46,30 +46,32 @@ export default function ReportCard({ data }) {
         },
       }}
     >
-      <CardMedia
-        component="img"
-        height="150"
-        image={data.imgUrl}
-        alt="image"
-        sx={{ backgroundColor: "#D9D9D9", objectFit: "contain" }}
-      />
-      <CardContent>
-        <Typography variant="h4" noWrap component="div">
-          {data.objName}
-        </Typography>
-        <Typography
-          // variant="h6"
-          sx={{
-            display: "flex",
-            alignItems: "end",
-            fontSize: ".9rem",
-            textTransform: "uppercase",
-            fontWeight: "light",
-          }}
-        >
-          <PlaceIcon /> {data.location}
-        </Typography>
-      </CardContent>
+      <CardActionArea onClick={handleDetailsOpen}>
+        <CardMedia
+          component="img"
+          height="150"
+          image={data.imgUrl}
+          alt="image"
+          sx={{ backgroundColor: "#D9D9D9", objectFit: "contain" }}
+        />
+        <CardContent>
+          <Typography variant="h4" noWrap component="div">
+            {data.objName}
+          </Typography>
+          <Typography
+            // variant="h6"
+            sx={{
+              display: "flex",
+              alignItems: "end",
+              fontSize: ".9rem",
+              textTransform: "uppercase",
+              fontWeight: "light",
+            }}
+          >
+            <PlaceIcon /> {data.location}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
       <CardActions sx={{ marginLeft: "auto", justifyContent: "end" }}>
         <Button
           size="small"

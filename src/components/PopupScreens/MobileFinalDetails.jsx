@@ -165,7 +165,7 @@ const MobileFinalDetails = ({
                     fontSize: ".8rem",
                   }}
                 >
-                  No one has claim this lost item yet
+                  No one has claimed this lost item yet
                 </p>
               )}
               {data.claimLogs.length >= 1 && (

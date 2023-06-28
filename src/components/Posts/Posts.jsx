@@ -26,7 +26,7 @@ const Posts = (props) => {
   return (
     <Box sx={{ padding: "3% 5%" }}>
       <Grid container spacing={3} justifyContent="flex-start">
-        {posts.map((item) => (
+        {posts.map((item, index) => (
           <Grid
             zeroMinWidth
             style={{ wordWrap: "break-word" }}
@@ -35,6 +35,7 @@ const Posts = (props) => {
             sm={6}
             md={4}
             xl={4}
+            key={index}
           >
             <ReportCard data={item} />
           </Grid>

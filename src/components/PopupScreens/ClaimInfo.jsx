@@ -107,7 +107,8 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
           console.log(err.message);
         }
       } else {
-        alert("Please enter your details to continue");
+        alert("Please fill all the form to claim an item");
+        return;
       }
 
       setMakeClaim(updatedMakeClaim);
@@ -241,6 +242,10 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
                       position: "relative",
                       margin: "auto",
                       width: "100%",
+                      "&:hover": {
+                        backgroundColor: "transparent",
+                        //   borderColor: "#E5FFD1",
+                      },
                     }}
                   >
                     <input
@@ -256,7 +261,7 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
                         color: "#000",
                         fontSize: "3em",
                         "&:hover": {
-                          //   backgroundColor: "#E5FFD1",
+                          // backgroundColor: "aqua",
                           //   borderColor: "#E5FFD1",
                           transition: "all .3s",
                           padding: "5%",
@@ -359,6 +364,7 @@ const ClaimInfo = ({ data, closeClaimInfo, closeDetailsDialog }) => {
             <Button
               onClick={handleSubmit}
               sx={{
+                height: "65px",
                 width: "70%",
                 margin: "auto",
                 // padding: "1.1em 0",

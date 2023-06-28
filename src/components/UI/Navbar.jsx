@@ -1,6 +1,6 @@
 import AddSharpIcon from "@mui/icons-material/AddSharp";
 import CancelIcon from "@mui/icons-material/Cancel";
-import HelpIcon from "@mui/icons-material/Help";
+import QuizIcon from "@mui/icons-material/Quiz";
 import { Box, Button, Divider } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 
@@ -121,7 +121,7 @@ const Navbar = () => {
               },
             }}
           >
-            <HelpIcon sx={{ fontSize: 40 }} />
+            <QuizIcon sx={{ fontSize: 40 }} />
           </IconButton>
         </Link>
       </div>
